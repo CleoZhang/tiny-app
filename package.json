@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/CleoZhang/app/issues"
   },
-  "homepage": "https://github.com/CleoZhang/app#readme"
+  "homepage": "https://github.com/CleoZhang/app#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
