@@ -8,8 +8,18 @@ const urlDatabase = {
 };
 
 // 1. check if the server is response-able / successfully set 
-app.get("/",(request, response) => {
-  response.send("Hello!");
+// 1.1 read HOME route
+app.get("/",(req, res) => {
+  res.send("Hello!");
+});
+// 1.2 read URLS route
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+
+// 1.3 read HELLO route
+app.get("/hello", (req, res) => {
+  res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
 app.listen(PORT, () => {
