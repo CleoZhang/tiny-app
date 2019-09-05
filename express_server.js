@@ -14,9 +14,17 @@ const urlDatabase = {
 app.get("/",(req, res) => {
   res.send("Hello!");
 });
+
 // 1.2 read URLS route
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+
+// 2.1 add a new route handler for "/urls"
+app.get("/urls", (req, res) => {
+  // 2.1.1 declare the variable as an object
+  let templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
 });
 
 // 1.3 read HELLO route
