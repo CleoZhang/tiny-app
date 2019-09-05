@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 function generateRandomString(n) {
     // Map to store 62 possible characters
     let map = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  
     let shortUrl = "";
   
     // Convert given integer id to a base 62 number
@@ -62,7 +61,19 @@ app.post("/urls", (req, res) => {
   // log the content of the specified id in <input>
   console.log(req.body);  // Log the POST request body to the console
   res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  // 6.1 generate ramdom short URL
+  let shortURL = generateRandomString(6);
+  // 6.2 pair up and store
+  urlDatabase[shortURL] = req.body.longURL;
 });
+
+  // 7 it receives a POST request to /urls it responds with a redirection to /urls/:shortURL, where shortURL is the random string we generated.
+  app.get("/u/:shortURL", (req, res) => {
+    let shortURL = req.params.shortURL;
+    const longURL = urlDatabase[shortURL];
+    console.log(longURL);
+    res.redirect(longURL);
+  });
 
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
