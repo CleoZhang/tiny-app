@@ -59,12 +59,13 @@ app.get("/urls/new", (req, res) => {
 // the data in the request body is sent as a Buffer. While this data type is great for transmitting data, it's not readable for us humans.
 app.post("/urls", (req, res) => {
   // log the content of the specified id in <input>
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  // console.log(req.body);  // Log the POST request body to the console
+  // res.send("Ok");         // Respond with 'Ok' (we will replace this)
   // 6.1 generate ramdom short URL
   let shortURL = generateRandomString(6);
   // 6.2 pair up and store
   urlDatabase[shortURL] = req.body.longURL;
+  res.redirect('/urls');
 });
 
 // 7 it receives a POST request to /urls it responds with a redirection to /urls/:shortURL, where shortURL is the random string we generated.
@@ -76,13 +77,25 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  // QUESTION: When passing through the template variable, what name should be called within??????
   let templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
   res.render("urls_show", templateVars);
 });
 
-// 1.3 read HELLO route
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+// 8 handle the delete POST delete function
+app.post("/urls/:shortURL/delete", (req, res) => {
+  const shortURL = req.params.shortURL;
+  delete urlDatabase[shortURL];
+  res.redirect('/urls');
+});
+
+// // 1.3 read HELLO route
+// app.get("/hello", (req, res) => {
+//   res.send("<html><body>Hello <b>World</b></body></html>\n");
+// });
+
+app.get('*', (request, response) => {
+  response.redirect('/urls');
 });
 
 app.listen(PORT, () => {
