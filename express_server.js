@@ -38,6 +38,11 @@ app.get("/",(req, res) => {
   res.send("Hello!");
 });
 
+// 10
+app.get("/register", (req, res) => {
+  res.render("register");
+});
+
 // 1.2 read URLS route
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -56,7 +61,8 @@ app.get("/urls", (req, res) => {
 // if we place this route after the /urls/:id definition,
 // any calls to /urls/new will be handled by app.get("/urls/:id", ...)
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  templateVars = { username: req.cookies["username"] };
+  res.render("urls_new", templateVars);
 });
 
 // 4.1 add a new POST route
@@ -82,7 +88,7 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  let templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
+  let templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL, username: req.cookies["username"] };
   res.render("urls_show", templateVars);
 });
 
@@ -101,7 +107,6 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  let username = req.body.username;
   // set the cookie here
   res.clearCookie('username');
   res.redirect('/urls');
