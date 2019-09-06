@@ -45,6 +45,15 @@ const users = {
   }
 }
 
+const findEmail = function(email){
+  for (let id in users){
+    if(users[id].email === email){
+      return true;
+    }
+  }
+  return false;
+};
+
 // 1. check if the server is response-able / successfully set
 // 1.1 read HOME route
 app.get("/",(req, res) => {
@@ -54,20 +63,29 @@ app.get("/",(req, res) => {
 // 10 registration form
 app.get("/register", (req, res) => {
   res.render("register");
+  // TODO: May need add ASYNC Flow here
+  if(!req.body.password || !req.body.email){
+    res.send("404 Not Found");
+  }else if(findEmail(req.body.email)){
+    res.send("404 Not Found");
+  }
 });
 
 app.post("/register", (req, res) => {
   // add a new user tp the global users object: id, email, password
+  let user = {};
   // get a random user ID
   let id = generateRandomString(6);
   // adding the user
   let email = req.body.email;
   let password = req.body.password;
-  user[id].id = id;
-  user[id].email = email;
-  user[id].password = password;
+  user[id] = id;
+  user[email] = email;
+  user[password] = password;
+  users[id] = user;
+  console.log(user);
   // set a user_id cookie containing the user's newly generated ID.
-  res.cookie('username', id);
+  res.cookie('user_id', id);
   // Redirect the user to the /urls page.
   res.redirect('/urls');
 });
