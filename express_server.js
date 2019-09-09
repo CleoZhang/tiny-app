@@ -107,12 +107,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 app.get("/register", (req, res) => {
   if (req.cookies["user_id"]) {
     res.redirect('/urls');
-    return;
   }
   const templateVars = {
     user_id: req.cookies["user_id"],
   };
-  // TODO: may need to render the logged in username here too
   res.render("register", templateVars);
 });
 
@@ -154,12 +152,12 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
 
   if (!req.body.email || !req.body.password) {
-    res.redirect('/login?failed=true');
-  } else if (findEmail(req.body.email)) {
+    res.sendStatus(403);
+  } else if (findEmail(req.body.email) && findEmail(req.body.email).password === req.body.password) {
     res.cookie('user_id', findEmail(req.body.email).id);
     res.redirect('/urls');
   } else {
-    res.redirect('/register');
+    res.sendStatus(403);
   }
 });
 
